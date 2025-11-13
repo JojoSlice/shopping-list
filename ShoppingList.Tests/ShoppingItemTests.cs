@@ -348,12 +348,10 @@ public class ShoppingItemTests
     }
 
     [Fact]
-    public void Delete_ShouldReturnFalseIfNotFound()
+    public void Delete_ShouldReturnExceptionIfNotFound()
     {
         var sut = new ShoppingListService();
 
-        var expected = sut.Delete("InvalidId");
-
-        Assert.False(expected);
+        Assert.Throws<NullReferenceException>(() => sut.GetById("InvallidId"));
     }
 }

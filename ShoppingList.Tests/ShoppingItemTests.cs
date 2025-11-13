@@ -281,7 +281,7 @@ public class ShoppingItemTests
         var sut = new ShoppingListService();
         var actual = sut.Add(expected.Name, expected.Quantity, expected.Notes);
 
-        Assert.NotEmpty(actual.Name);
+        Assert.NotEmpty(actual.Id);
 
         Assert.Equal(expected.Name, actual.Name);
         Assert.Equal(expected.Quantity, actual.Quantity);
@@ -302,7 +302,9 @@ public class ShoppingItemTests
     public void GetAll_ShouldReturnItemsArray()
     {
         var sut = new ShoppingListService();
-        var expected = GenerateDemoItems();
+        var items = GenerateDemoItems();
+
+        var expected = items.Where(i => i != null).ToArray();
 
         var actual = sut.GetAll();
 

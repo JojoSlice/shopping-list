@@ -56,9 +56,28 @@ public class ShoppingListService : IShoppingListService
 
     public bool Delete(string id)
     {
-        // TODO: Students - Implement this method
-        // Return true if deleted, false if not found
-        return false;
+        bool isDeleted = false;
+
+        for (int i = 0; i < _items.Length; i++)
+        {
+            if (_items[i].Id == id)
+            {
+                _items[i] = null;
+                isDeleted = true;
+            }
+        }
+        if(isDeleted)
+        {
+            var newItemsList = new ShoppingItem[_nextIndex - 1];
+            for (int i = 0; i < _items.Length; i++)
+            {
+                if (_items[i] != null)
+                    newItemsList.Append(_items[i]);
+            }
+            _items = newItemsList;
+        }
+        return isDeleted ? isDeleted : throw new NullReferenceException($"The item with id {id} did not exist");
+
     }
 
     public IReadOnlyList<ShoppingItem> Search(string query)

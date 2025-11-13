@@ -333,6 +333,17 @@ public class ShoppingItemTests
         var sut = new ShoppingListService();
 
         Assert.Throws<NullReferenceException>(() => sut.GetById(Guid.NewGuid().ToString()));
+    }
 
+    [Fact]
+    public void Delete_ShouldReturnCorrectBool()
+    {
+        var sut = new ShoppingListService();
+
+        var item = sut.Add("test", 1, "note");
+
+        var expected = sut.Delete(item.Id);
+
+        Assert.True(expected);
     }
 }

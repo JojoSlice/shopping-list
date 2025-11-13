@@ -30,13 +30,20 @@ public class ShoppingListService : IShoppingListService
 
     public ShoppingItem? Add(string name, int quantity, string? notes)
     {
-        var newItem = new ShoppingItem
+        try
         {
-            Name = name,
-            Quantity = quantity,
-            Notes = notes
-        };
-        return newItem;
+            var newItem = new ShoppingItem
+            {
+                Name = name,
+                Quantity = quantity,
+                Notes = notes,
+            };
+            return newItem;
+        }
+        catch (ArgumentException ex)
+        {
+            throw new ArgumentException(ex.Message);
+        }
     }
 
     public ShoppingItem? Update(string id, string name, int quantity, string? notes)
@@ -90,7 +97,7 @@ public class ShoppingListService : IShoppingListService
             Name = "Dishwasher tablets",
             Quantity = 1,
             Notes = "80st/pack - Rea",
-            IsPurchased = false
+            IsPurchased = false,
         };
         items[1] = new ShoppingItem
         {
@@ -98,7 +105,7 @@ public class ShoppingListService : IShoppingListService
             Name = "Ground meat",
             Quantity = 1,
             Notes = "2kg - origin Sweden",
-            IsPurchased = false
+            IsPurchased = false,
         };
         items[2] = new ShoppingItem
         {
@@ -106,7 +113,7 @@ public class ShoppingListService : IShoppingListService
             Name = "Apples",
             Quantity = 10,
             Notes = "Pink Lady",
-            IsPurchased = false
+            IsPurchased = false,
         };
         items[3] = new ShoppingItem
         {
@@ -114,8 +121,9 @@ public class ShoppingListService : IShoppingListService
             Name = "Toothpaste",
             Quantity = 1,
             Notes = "Colgate",
-            IsPurchased = false
+            IsPurchased = false,
         };
         return items;
     }
 }
+

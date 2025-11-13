@@ -268,7 +268,6 @@ public class ShoppingItemTests
 
     //#endregion
 
-
     [Fact]
     public void Add_ShouldReturnItem()
     {
@@ -297,5 +296,54 @@ public class ShoppingItemTests
         var actual = sut.Add("", 1, "desc");
 
         Assert.Throws<ArgumentException>(() => actual);
+    }
+
+    [Fact]
+    public void GetAll_ShouldReturnItemsArray()
+    {
+        var sut = new ShoppingListService();
+        var expected = GenerateDemoItems();
+
+        var actual = sut.GetAll();
+
+        Assert.Equal(expected, actual);
+    }
+
+    private ShoppingItem[] GenerateDemoItems()
+    {
+        var items = new ShoppingItem[5];
+        items[0] = new ShoppingItem
+        {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Dishwasher tablets",
+            Quantity = 1,
+            Notes = "80st/pack - Rea",
+            IsPurchased = false,
+        };
+        items[1] = new ShoppingItem
+        {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Ground meat",
+            Quantity = 1,
+            Notes = "2kg - origin Sweden",
+            IsPurchased = false,
+        };
+        items[2] = new ShoppingItem
+        {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Apples",
+            Quantity = 10,
+            Notes = "Pink Lady",
+            IsPurchased = false,
+        };
+        items[3] = new ShoppingItem
+        {
+            Id = Guid.NewGuid().ToString(),
+            Name = "Toothpaste",
+            Quantity = 1,
+            Notes = "Colgate",
+            IsPurchased = false,
+        };
+        return items;
     }
 }

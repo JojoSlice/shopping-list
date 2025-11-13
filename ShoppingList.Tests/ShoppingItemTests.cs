@@ -361,6 +361,7 @@ public class ShoppingItemTests
     [InlineData("abc", 3)]
     [InlineData("abcd", 2)]
     [InlineData("abcde", 1)]
+    [InlineData("bröd", 5)]
     public void Search_ShouldReturnMatchingItems(string query, int expectedMatches)
     {
         var sut = new ShoppingListService();

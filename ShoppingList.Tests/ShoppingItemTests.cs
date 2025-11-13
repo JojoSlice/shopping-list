@@ -315,4 +315,15 @@ public class ShoppingItemTests
         Assert.Equal(expected, actual.Count);
     }
 
+    [Fact]
+    public void GetById_ShouldReturnCorrectItem()
+    {
+        var sut = new ShoppingListService();
+
+        var expected = sut.Add("test", 1, "note");
+
+        var actual = sut.GetById(expected!.Id);
+
+        Assert.Equal(expected, actual);
+    }
 }

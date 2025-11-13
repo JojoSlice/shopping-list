@@ -297,20 +297,22 @@ public class ShoppingItemTests
         Assert.Throws<ArgumentException>(() => sut.Add("", 1, "desc"));
     }
 
-    [Fact]
-    public void GetAll_ShouldReturnItemsArray()
+    [Theory]
+    [InlineData(1)]
+    [InlineData(5)]
+    [InlineData(20)]
+    public void GetAll_ShouldReturnItemsArray(int expected)
     {
         var sut = new ShoppingListService();
-        var items = TestItems();
 
-        var expected = items.Where(i => i != null).ToArray();
+        for (int i = 0; i < expected; i++)
+        {
+            sut.Add("test", 1, "desc");
+        }
 
         var actual = sut.GetAll();
 
-        for (int i = 0; i < actual.Count(); i++)
-        {
-            Assert.Equal(expected[i].Name, actual[i].Name);
-        }
+        Assert.Equal(expected, actual.Count);
     }
 
 }

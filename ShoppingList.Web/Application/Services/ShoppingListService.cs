@@ -12,13 +12,13 @@ public class ShoppingListService : IShoppingListService
     {
         // Initialize with demo data for UI demonstration
         // TODO: Students can remove or comment this out when running unit tests
-        //_items = GenerateDemoItems();
-        _nextIndex = 4; // We have 4 demo items initialized
+        _items = [];
+        _nextIndex = 0; // We have 4 demo items initialized
     }
 
     public IReadOnlyList<ShoppingItem> GetAll()
     {
-        return _items[.._nextIndex];
+        return _items;
     }
 
     public ShoppingItem? GetById(string id)
@@ -35,7 +35,8 @@ public class ShoppingListService : IShoppingListService
             Quantity = quantity,
             Notes = notes,
         };
-        _items.Prepend(newItem);
+        Array.Resize(ref _items, _nextIndex + 1);
+        _items[_nextIndex] = newItem;
         _nextIndex++;
 
         return newItem;

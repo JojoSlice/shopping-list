@@ -326,4 +326,13 @@ public class ShoppingItemTests
 
         Assert.Equal(expected, actual);
     }
+
+    [Fact]
+    public void GetById_ThrowsIfIdIsNotFound()
+    {
+        var sut = new ShoppingListService();
+
+        Assert.Throws<NullReferenceException>(() => sut.GetById(Guid.NewGuid().ToString()));
+
+    }
 }

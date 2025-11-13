@@ -66,7 +66,7 @@ public class ShoppingListService : IShoppingListService
                 isDeleted = true;
             }
         }
-        if(isDeleted)
+        if (isDeleted)
         {
             var newItemsList = new ShoppingItem[_nextIndex - 1];
             for (int i = 0; i < _items.Length; i++)
@@ -76,15 +76,23 @@ public class ShoppingListService : IShoppingListService
             }
             _items = newItemsList;
         }
-        return isDeleted ? isDeleted : throw new NullReferenceException($"The item with id {id} did not exist");
-
+        return isDeleted
+            ? isDeleted
+            : throw new NullReferenceException($"The item with id {id} did not exist");
     }
 
     public IReadOnlyList<ShoppingItem> Search(string query)
     {
-        // TODO: Students - Implement this method
-        // Return the filtered items
-        return [];
+        ShoppingItem[] result = [];
+
+        for (int i = 0; i < _items.Length; i++)
+        {
+            var name = _items[i].Name.ToLower();
+            var note = _items[i].Notes.ToLower();
+            if (name.Contains(query) || note.Contains(query))
+                result.Append(_items[i]);
+        }
+        return result;
     }
 
     public int ClearPurchased()

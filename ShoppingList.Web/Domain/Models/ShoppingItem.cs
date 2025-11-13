@@ -20,11 +20,7 @@ public class ShoppingItem
         set => _quantity = ValidateQuantity(value);
     }
 
-    public string? Notes
-    {
-        get => _notes;
-        set => _notes = value;
-    }
+    public string? Notes { get; set; }
 
     public bool IsPurchased { get; set; } = false;
 

@@ -1,5 +1,5 @@
+using ShoppingList.Application.Services;
 using ShoppingList.Domain.Models;
-using Xunit;
 
 namespace ShoppingList.Tests;
 
@@ -244,7 +244,7 @@ public class ShoppingItemTests
             Id = id,
             Name = name,
             Quantity = quantity,
-            Notes = notes
+            Notes = notes,
         };
 
         // Assert
@@ -259,11 +259,7 @@ public class ShoppingItemTests
     public void ShoppingItem_WithAutoTrimming_ShouldTrimName()
     {
         // Arrange & Act
-        var item = new ShoppingItem
-        {
-            Name = "  Milk  ",
-            Notes = "  Organic  "
-        };
+        var item = new ShoppingItem { Name = "  Milk  ", Notes = "  Organic  " };
 
         // Assert
         Assert.Equal("Milk", item.Name);
@@ -271,4 +267,25 @@ public class ShoppingItemTests
     }
 
     #endregion
+
+
+    [Fact]
+    public void Add_ShouldReturnItem()
+    {
+        var expected = new ShoppingItem
+        {
+            Name = "itemTest",
+            Quantity = 1,
+            Notes = "test item",
+        };
+
+        var sut = new ShoppingListService();
+        var actual = sut.Add(expected.Name, expected.Quantity, expected.Notes);
+
+        Assert.NotEmpty(actual.Name);
+
+        Assert.Equal(expected.Name, actual.Name);
+        Assert.Equal(expected.Quantity, actual.Quantity);
+        Assert.Equal(expected.Notes, actual.Notes);
+    }
 }

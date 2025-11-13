@@ -12,7 +12,7 @@ public class ShoppingListService : IShoppingListService
     {
         // Initialize with demo data for UI demonstration
         // TODO: Students can remove or comment this out when running unit tests
-        _items = GenerateDemoItems();
+        //_items = GenerateDemoItems();
         _nextIndex = 4; // We have 4 demo items initialized
     }
 
@@ -29,20 +29,16 @@ public class ShoppingListService : IShoppingListService
 
     public ShoppingItem? Add(string name, int quantity, string? notes)
     {
-        try
+        var newItem = new ShoppingItem
         {
-            var newItem = new ShoppingItem
-            {
-                Name = name,
-                Quantity = quantity,
-                Notes = notes,
-            };
-            return newItem;
-        }
-        catch (ArgumentException ex)
-        {
-            throw new ArgumentException(ex.Message);
-        }
+            Name = name,
+            Quantity = quantity,
+            Notes = notes,
+        };
+        _items.Prepend(newItem);
+        _nextIndex++;
+
+        return newItem;
     }
 
     public ShoppingItem? Update(string id, string name, int quantity, string? notes)
@@ -85,44 +81,6 @@ public class ShoppingListService : IShoppingListService
         // TODO: Students - Implement this method
         // Return true if successful, false otherwise
         return false;
-    }
-
-    private ShoppingItem[] GenerateDemoItems()
-    {
-        var items = new ShoppingItem[5];
-        items[0] = new ShoppingItem
-        {
-            Id = Guid.NewGuid().ToString(),
-            Name = "Dishwasher tablets",
-            Quantity = 1,
-            Notes = "80st/pack - Rea",
-            IsPurchased = false,
-        };
-        items[1] = new ShoppingItem
-        {
-            Id = Guid.NewGuid().ToString(),
-            Name = "Ground meat",
-            Quantity = 1,
-            Notes = "2kg - origin Sweden",
-            IsPurchased = false,
-        };
-        items[2] = new ShoppingItem
-        {
-            Id = Guid.NewGuid().ToString(),
-            Name = "Apples",
-            Quantity = 10,
-            Notes = "Pink Lady",
-            IsPurchased = false,
-        };
-        items[3] = new ShoppingItem
-        {
-            Id = Guid.NewGuid().ToString(),
-            Name = "Toothpaste",
-            Quantity = 1,
-            Notes = "Colgate",
-            IsPurchased = false,
-        };
-        return items;
     }
 }
 

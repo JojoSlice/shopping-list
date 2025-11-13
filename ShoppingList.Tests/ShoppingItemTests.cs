@@ -1,3 +1,4 @@
+using ShoppingList.Application.Interfaces;
 using ShoppingList.Application.Services;
 using ShoppingList.Domain.Models;
 
@@ -293,16 +294,14 @@ public class ShoppingItemTests
     {
         var sut = new ShoppingListService();
 
-        var actual = sut.Add("", 1, "desc");
-
-        Assert.Throws<ArgumentException>(() => actual);
+        Assert.Throws<ArgumentException>(() => sut.Add("", 1, "desc"));
     }
 
     [Fact]
     public void GetAll_ShouldReturnItemsArray()
     {
         var sut = new ShoppingListService();
-        var items = GenerateDemoItems();
+        var items = TestItems();
 
         var expected = items.Where(i => i != null).ToArray();
 
@@ -314,41 +313,4 @@ public class ShoppingItemTests
         }
     }
 
-    private ShoppingItem[] GenerateDemoItems()
-    {
-        var items = new ShoppingItem[5];
-        items[0] = new ShoppingItem
-        {
-            Id = Guid.NewGuid().ToString(),
-            Name = "Dishwasher tablets",
-            Quantity = 1,
-            Notes = "80st/pack - Rea",
-            IsPurchased = false,
-        };
-        items[1] = new ShoppingItem
-        {
-            Id = Guid.NewGuid().ToString(),
-            Name = "Ground meat",
-            Quantity = 1,
-            Notes = "2kg - origin Sweden",
-            IsPurchased = false,
-        };
-        items[2] = new ShoppingItem
-        {
-            Id = Guid.NewGuid().ToString(),
-            Name = "Apples",
-            Quantity = 10,
-            Notes = "Pink Lady",
-            IsPurchased = false,
-        };
-        items[3] = new ShoppingItem
-        {
-            Id = Guid.NewGuid().ToString(),
-            Name = "Toothpaste",
-            Quantity = 1,
-            Notes = "Colgate",
-            IsPurchased = false,
-        };
-        return items;
-    }
 }

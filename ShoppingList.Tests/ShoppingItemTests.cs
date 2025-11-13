@@ -354,4 +354,25 @@ public class ShoppingItemTests
 
         Assert.Throws<NullReferenceException>(() => sut.GetById("InvallidId"));
     }
+
+    [Theory]
+    [InlineData("a", 5)]
+    [InlineData("ab", 4)]
+    [InlineData("abc", 3)]
+    [InlineData("abcd", 2)]
+    [InlineData("abcde", 1)]
+    public void Search_ShouldReturnMatchingItems(string query, int expectedMatches)
+    {
+        var sut = new ShoppingListService();
+
+        sut.Add("Bröd", 1, "a");
+        sut.Add("Bröd", 1, "ab");
+        sut.Add("Bröd", 1, "abc");
+        sut.Add("Bröd", 1, "abcd");
+        sut.Add("Bröd", 1, "abcde");
+
+        var actual = sut.Search(query);
+
+        Assert.Equal(expectedMatches, actual.Count());
+    }
 }

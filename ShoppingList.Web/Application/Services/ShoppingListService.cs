@@ -28,7 +28,8 @@ public class ShoppingListService : IShoppingListService
             if (item.Id == id)
                 return item;
         }
-        return null;
+
+        throw new NullReferenceException("No item found");
     }
 
     public ShoppingItem? Add(string name, int quantity, string? notes)
@@ -88,4 +89,3 @@ public class ShoppingListService : IShoppingListService
         return false;
     }
 }
-

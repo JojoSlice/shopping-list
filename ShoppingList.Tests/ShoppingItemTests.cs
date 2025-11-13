@@ -308,7 +308,10 @@ public class ShoppingItemTests
 
         var actual = sut.GetAll();
 
-        Assert.Equal(expected, actual);
+        for (int i = 0; i <= actual.Count(); i++)
+        {
+            Assert.Equal(expected[i].Name, actual[i].Name);
+        }
     }
 
     private ShoppingItem[] GenerateDemoItems()

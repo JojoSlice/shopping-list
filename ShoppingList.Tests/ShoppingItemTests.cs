@@ -336,7 +336,7 @@ public class ShoppingItemTests
     }
 
     [Fact]
-    public void Delete_ShouldReturnCorrectBool()
+    public void Delete_ShouldReturnTrueIfDeleted()
     {
         var sut = new ShoppingListService();
 
@@ -345,5 +345,15 @@ public class ShoppingItemTests
         var expected = sut.Delete(item.Id);
 
         Assert.True(expected);
+    }
+
+    [Fact]
+    public void Delete_ShouldReturnFalseIfNotFound()
+    {
+        var sut = new ShoppingListService();
+
+        var expected = sut.Delete("InvalidId");
+
+        Assert.False(expected);
     }
 }

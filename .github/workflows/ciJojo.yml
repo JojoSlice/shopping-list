@@ -23,9 +23,9 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
-          cache: true
+
       - name: Install dependencies
-        run: dotnet add package Newtonsoft.Json --version 12.0.1
+        run: dotnet restore
 
       - name: Display dotnet version
         run: dotnet --version
@@ -51,9 +51,10 @@ jobs:
 
       - name: Send message to Discord
         id: check_discord
-        if: steps.check_discord.outputs.discord_configured == 'true' && matrix.os == 'ubuntu-latest'
+        if: steps.check_discord.outputs.discord_configured == 'true'
+        shell: bash
         run: |
           curl -H "Content-Type: application/json" \
             -X POST \
-          -d '{"content": "🚀 Iron dev message from: ${{ github.actor }}"}' \
+          -d '{"content": "🚀 ${{ github.actor }} successfully push to ${{ github.ref }}"}' \
             ${{ secrets.DISCORD_WEBHOOK }}

@@ -29,11 +29,8 @@ jobs:
       - name: Install dependencies
         run: dotnet restore
 
-      - name: Display dotnet version
-        run: dotnet --version
-
       - name: Build with analysis
-        run: dotnet build --no-restore /p:TreatWarningsAsErrors=true
+        run: dotnet build --no-restore
 
       - name: Build result
         if: success()

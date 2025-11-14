@@ -10,18 +10,17 @@ on:
 jobs:
   build:
     name: Build on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+    runs-on: ubunto-latest
 
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
         dotnet-version: ["8.0.x", "9.0.x"]
 
     timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v5
-      - name: Setup .Net with ${{ matrix.dotnet-version }} on ${{ matrix.os }}
+      - name: Setup .Net with ${{ matrix.dotnet-version }}
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
@@ -33,7 +32,7 @@ jobs:
         if: success()
         shell: bash
         run: |
-          echo "✅ Build success on ${{ matrix.os }}, .Net version ${{ matrix.dotnet-version }}!"
+          echo "✅ Build successfully with .Net version ${{ matrix.dotnet-version }}!"
           echo "   Push made by: ${{ github.actor }}"
 
       - name: Verify Discord webhook

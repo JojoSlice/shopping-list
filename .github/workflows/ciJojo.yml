@@ -14,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        os: ["ubunto-latest", "windows-latest"]
+        os: ["ubuntu-latest", "windows-latest"]
         dotnet-version: ["8.0.x", "9.0.x"]
 
     timeout-minutes: 10

@@ -1,0 +1,37 @@
+name: On dispatch
+
+on:
+  workflow_dispatch:
+    inputs:
+      username:
+        description: "A username form the caller"
+        default: ${{ github.actor }}
+        required: false
+        type: string
+
+jobs:
+  print-username:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print the input name to STDOUT
+        run: echo The username is ${{ inputs.username }}
+
+      - name: Verify Discord webhook
+        id: verify_discord
+        run: |
+          if [ -z "${{ secrets.DISCORD_WEBHOOK }}" ]; then
+            echo "⚠️  WARNING: Secret 'DISCORD_WEBHOOK' is not configured"
+          else
+            echo "✅ Secret 'DISCORD_WEBHOOK' is configured"
+            echo "discord_configured=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Send message to Discord
+        if: steps.verify_discord.outputs.discord_configured == 'true'
+        shell: bash
+        run: |
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d '{"content": "🚀 ${{ github.actor }} successfully pushed to ${{ github.ref }} (.NET ${{ matrix.dotnet-version }})"}' \
+            ${{ secrets.DISCORD_WEBHOOK }}

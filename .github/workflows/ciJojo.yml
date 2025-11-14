@@ -1,21 +1,20 @@
-name: CI/CD Pipeline
+name: Jojo's CI/CD Pipeline
 
 on:
-  workflow_dispatch:  # Manual trigger
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
+    paths:
+      - "**.cs"
 
 jobs:
   build:
     name: Build and Test (.NET ${{ matrix.dotnet-version }})
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
+        os: ["ubunto-latest", "windows-latest"]
         dotnet-version: ["8.0.x", "9.0.x"]
 
     timeout-minutes: 10
@@ -48,22 +47,3 @@ jobs:
           echo "✅ Build and tests passed with .NET version ${{ matrix.dotnet-version }}!"
           echo "   Triggered by: ${{ github.actor }}"
           echo "   Event: ${{ github.event_name }}"
-
-      - name: Verify Discord webhook
-        id: verify_discord
-        run: |
-          if [ -z "${{ secrets.DISCORD_WEBHOOK }}" ]; then
-            echo "⚠️  WARNING: Secret 'DISCORD_WEBHOOK' is not configured"
-          else
-            echo "✅ Secret 'DISCORD_WEBHOOK' is configured"
-            echo "discord_configured=true" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Send message to Discord
-        if: steps.verify_discord.outputs.discord_configured == 'true'
-        shell: bash
-        run: |
-          curl -H "Content-Type: application/json" \
-            -X POST \
-            -d '{"content": "🚀 ${{ github.actor }} successfully pushed to ${{ github.ref }} (.NET ${{ matrix.dotnet-version }})"}' \
-            ${{ secrets.DISCORD_WEBHOOK }}

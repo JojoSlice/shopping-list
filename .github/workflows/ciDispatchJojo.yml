@@ -8,9 +8,12 @@ on:
         default: Secret User
         required: false
         type: string
-      environment:
-        description: "What environment to run on"
-        type: environment
+      os:
+        description: "Select Os"
+        type: choice
+        options:
+          - ubuntu-latest
+          - windows-latest
         required: true
       message:
         description: "The message to send to Discord"
@@ -19,12 +22,9 @@ on:
 
 jobs:
   print-username:
-    runs-on: ${{ inputs.environment }}
+    runs-on: ${{ inputs.os }}
 
     steps:
-      - name: Print the input name to STDOUT
-        run: echo The username is ${{ inputs.username }}
-
       - name: Verify Discord webhook
         id: verify_discord
         run: |
@@ -41,5 +41,5 @@ jobs:
         run: |
           curl -H "Content-Type: application/json" \
             -X POST \
-            -d '{"content": "🚀 ${{ input.username }} says ${{ input.message }} from ${{ input.environment } }})"}' \
+            -d '{"content": "🚀 ${{ input.username }} says ${{ input.message }} from ${{ input.os } }})"}' \
             ${{ secrets.DISCORD_WEBHOOK }}

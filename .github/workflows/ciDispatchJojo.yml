@@ -1,17 +1,25 @@
-name: On dispatch
+name: Send message to Discord
 
 on:
   workflow_dispatch:
     inputs:
       username:
-        description: "A username form the caller"
-        default: ${{ github.actor }}
+        description: "A username to use"
+        default: Secret User
         required: false
         type: string
+      environment:
+        description: "What environment to run on"
+        type: environment
+        required: true
+      message:
+        description: "The message to send to Discord"
+        type: string
+        required: true
 
 jobs:
   print-username:
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.environment }}
 
     steps:
       - name: Print the input name to STDOUT
@@ -33,5 +41,5 @@ jobs:
         run: |
           curl -H "Content-Type: application/json" \
             -X POST \
-            -d '{"content": "🚀 ${{ github.actor }} successfully pushed to ${{ github.ref }} (.NET ${{ matrix.dotnet-version }})"}' \
+            -d '{"content": "🚀 ${{ input.username }} says ${{ input.message }} from ${{ input.environment } }})"}' \
             ${{ secrets.DISCORD_WEBHOOK }}

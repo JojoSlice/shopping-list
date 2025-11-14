@@ -1,16 +1,18 @@
-name: Build on push to main
+name: CI/CD Pipeline
 
 on:
+  workflow_dispatch:  # Manual trigger
   push:
-    #    paths:
-    #     - "**.cs"
+    branches:
+      - main
+  pull_request:
     branches:
       - main
 
 jobs:
   build:
-    name: Build on ${{ matrix.os }}
-    runs-on: ubunto-latest
+    name: Build and Test (.NET ${{ matrix.dotnet-version }})
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
@@ -20,22 +22,35 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
-      - name: Setup .Net with ${{ matrix.dotnet-version }}
+
+      - name: Print runner context
+        run: echo '${{ toJson(runner) }}'
+
+      - name: Print GitHub context
+        run: echo '${{ toJson(github) }}'
+
+      - name: Setup .NET ${{ matrix.dotnet-version }}
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
 
-      - name: Build with analysis
+      - name: Build
         run: dotnet build
 
-      - name: Build result
+      - name: Run tests
+        if: success()
+        run: dotnet test
+
+      - name: Build and test result
         if: success()
         shell: bash
         run: |
-          echo "✅ Build successfully with .Net version ${{ matrix.dotnet-version }}!"
-          echo "   Push made by: ${{ github.actor }}"
+          echo "✅ Build and tests passed with .NET version ${{ matrix.dotnet-version }}!"
+          echo "   Triggered by: ${{ github.actor }}"
+          echo "   Event: ${{ github.event_name }}"
 
       - name: Verify Discord webhook
+        id: verify_discord
         run: |
           if [ -z "${{ secrets.DISCORD_WEBHOOK }}" ]; then
             echo "⚠️  WARNING: Secret 'DISCORD_WEBHOOK' is not configured"
@@ -45,11 +60,10 @@ jobs:
           fi
 
       - name: Send message to Discord
-        id: check_discord
-        if: steps.check_discord.outputs.discord_configured == 'true'
+        if: steps.verify_discord.outputs.discord_configured == 'true'
         shell: bash
         run: |
           curl -H "Content-Type: application/json" \
             -X POST \
-          -d '{"content": "🚀 ${{ github.actor }} successfully push to ${{ github.ref }}"}' \
+            -d '{"content": "🚀 ${{ github.actor }} successfully pushed to ${{ github.ref }} (.NET ${{ matrix.dotnet-version }})"}' \
             ${{ secrets.DISCORD_WEBHOOK }}

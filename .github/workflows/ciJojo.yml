@@ -2,8 +2,8 @@ name: Build on push to main
 
 on:
   push:
-    paths:
-      - "**.cs"
+    #    paths:
+    #     - "**.cs"
     branches:
       - main
 

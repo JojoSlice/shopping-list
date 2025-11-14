@@ -26,11 +26,8 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
 
-      - name: Install dependencies
-        run: dotnet restore
-
       - name: Build with analysis
-        run: dotnet build --no-restore
+        run: dotnet build
 
       - name: Build result
         if: success()

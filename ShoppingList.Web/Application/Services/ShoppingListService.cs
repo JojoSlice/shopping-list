@@ -1,4 +1,5 @@
-﻿using ShoppingList.Application.Interfaces;
+﻿using System.Runtime.CompilerServices;
+using ShoppingList.Application.Interfaces;
 using ShoppingList.Domain.Models;
 
 namespace ShoppingList.Application.Services;
@@ -57,42 +58,37 @@ public class ShoppingListService : IShoppingListService
     public bool Delete(string id)
     {
         bool isDeleted = false;
-
         for (int i = 0; i < _items.Length; i++)
         {
-            if (_items[i].Id == id)
+            if (_items[i] != null && _items[i].Id == id)
             {
                 _items[i] = null;
                 isDeleted = true;
             }
-        }
-        if (isDeleted)
-        {
-            var newItemsList = new ShoppingItem[_nextIndex - 1];
-            for (int i = 0; i < _items.Length; i++)
+            if (_items[i] == null && _items[i] != _items.Last())
             {
-                if (_items[i] != null)
-                    newItemsList.Append(_items[i]);
+                _items[i] = _items[i + 1];
+                _items[i + 1] = null;
             }
-            _items = newItemsList;
         }
-        return isDeleted
-            ? isDeleted
-            : throw new NullReferenceException($"The item with id {id} did not exist");
+        return isDeleted ? isDeleted : throw new NullReferenceException("Item not found");
     }
 
     public IReadOnlyList<ShoppingItem> Search(string query)
     {
-        ShoppingItem[] result = [];
+        List<ShoppingItem> results = [];
 
-        for (int i = 0; i < _items.Length; i++)
+        foreach (var item in _items)
         {
-            var name = _items[i].Name.ToLower();
-            var note = _items[i].Notes.ToLower();
-            if (name.Contains(query) || note.Contains(query))
-                result.Append(_items[i]);
+            if (
+                item.Name.Contains(query, StringComparison.OrdinalIgnoreCase)
+                || item.Notes.Contains(query, StringComparison.OrdinalIgnoreCase)
+            )
+            {
+                results.Add(item);
+            }
         }
-        return result;
+        return results.ToArray();
     }
 
     public int ClearPurchased()
